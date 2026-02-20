@@ -2,7 +2,6 @@
 
 # Ideas
 - copyright + data collection
-    - human with a gun shoots incoming bots that collects his personal data
-    - sidescrolling
-    - sounds are weird or unexpected (copyright issues)
-    - goal: user must destroy the (15?) bots; if bot touches human, user loses
+    - inspired from pacman game
+    - user controls a ghost police
+    - goal is to catch 3 pacman (bad guys) before time runs out (or before they steal all data in the map)
