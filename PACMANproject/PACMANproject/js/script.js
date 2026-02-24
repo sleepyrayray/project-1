@@ -3,10 +3,10 @@ const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
 document.body.style.margin = "0";
-document.body.style.background = "#8fd694"; // softer green
+document.body.style.background = "#8fd694";  // gras green backg
 document.body.appendChild(canvas);
 
-// Map settings (wider than tall)
+// wider than tall canvas
 const TILE_SIZE = 28;
 const MAP_COLS = 28;
 const MAP_ROWS = 18;
@@ -14,7 +14,7 @@ const MAP_ROWS = 18;
 const cssWidth = TILE_SIZE * MAP_COLS;
 const cssHeight = TILE_SIZE * MAP_ROWS;
 
-// High DPI Fix
+//  resolution settings
 const dpr = window.devicePixelRatio || 1;
 canvas.width = cssWidth * dpr;
 canvas.height = cssHeight * dpr;
@@ -22,7 +22,7 @@ canvas.style.width = cssWidth + "px";
 canvas.style.height = cssHeight + "px";
 ctx.scale(dpr, dpr);
 
-// 1 = wall, 0 = path
+// 1 = wall, 0 = path, coding the map 
 const map = [
     "1111111111111111111111111111",
     "1000000000000110000000000001",
@@ -44,7 +44,7 @@ const map = [
     "1111111111111111111111111111",
 ];
 
-// Draw brick wall tile
+// Draw bricks
 function drawBrick(x, y, size) {
     ctx.fillStyle = "#8B5A2B"; // warm brown
     ctx.fillRect(x, y, size, size);
@@ -75,7 +75,7 @@ function drawBrick(x, y, size) {
 
 // Draw map
 function drawMap() {
-    // Softer grass green
+
     ctx.fillStyle = "#8fd694";
     ctx.fillRect(0, 0, cssWidth, cssHeight);
 
