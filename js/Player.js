@@ -9,21 +9,29 @@ class Player {
         this.color = color;
         this.role = role;
 
-        // For thief boost
-        this.boostTimeLeft = 0;
-        this.boostMultiplier = 1.5;
+        // Speed boost
+        this.speedBoostAmount = 0;
+        this.speedBoostTimeLeft = 0;
     }
 
-    giveSpeedBoost(seconds) {
-        this.boostTimeLeft = Math.max(this.boostTimeLeft, seconds);
-        this.speed = this.baseSpeed * this.boostMultiplier;
+    giveSpeedBoost(amount, seconds) {
+        // Stack speed boost
+        this.speedBoostAmount += amount;
+        // this.speedBoostAmount = Math.max(this.speedBoostAmount, amount); // keep strongest boost
+        this.speedBoostTimeLeft = Math.max(this.speedBoostTimeLeft, seconds);
+
+        this.speed = this.baseSpeed + this.speedBoostAmount;
     }
 
     update(dt) {
-        if (this.boostTimeLeft > 0) {
-            this.boostTimeLeft -= dt;
-            if (this.boostTimeLeft <= 0) {
-                this.boostTimeLeft = 0;
+        // Boost timer and reset speed
+        if (this.speedBoostTimeLeft > 0) {
+            this.speedBoostTimeLeft -= dt;
+
+            if (this.speedBoostTimeLeft <= 0) {
+                this.speedBoostTimeLeft = 0;
+                this.speedBoostAmount = 0;
+                // back to normal
                 this.speed = this.baseSpeed;
             }
         }

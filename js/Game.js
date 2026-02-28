@@ -33,7 +33,7 @@ class Game {
             y: policeSpawn.y,
             w: this.playerSize.w,
             h: this.playerSize.h,
-            baseSpeed: 120,
+            baseSpeed: 75,
             color: "blue",
             role: "police",
         });
@@ -44,7 +44,7 @@ class Game {
             y: thiefSpawn.y,
             w: this.playerSize.w,
             h: this.playerSize.h,
-            baseSpeed: 120,
+            baseSpeed: 70,
             color: "red",
             role: "thief",
         });
@@ -266,7 +266,7 @@ class Game {
 
     movePolice(dt) {
         // Police movement uses WASD keys
-        const policeSpeed = 80;
+        const policeSpeed = this.police.speed;
 
         let moveX = 0;
         let moveY = 0;
@@ -301,7 +301,7 @@ class Game {
 
     moveThief(dt) {
         // Thief movement uses arrow keys
-        const thiefSpeed = 60; // slower than police
+        const thiefSpeed = this.thief.speed; // slower than police
 
         let thiefMoveX = 0;
         let thiefMoveY = 0;
@@ -356,7 +356,8 @@ class Game {
         // Thief gains speed boost at pickup
         for (const c of this.collectibles) {
             if (c.checkPickup(this.thief)) {
-                this.thief.giveSpeedBoost(1.0); // 1 second boost
+                // +15 speed for 3 seconds
+                this.thief.giveSpeedBoost(15, 3);
             }
         }
 
