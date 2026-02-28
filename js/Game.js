@@ -60,6 +60,8 @@ class Game {
         // Create thief sprite
         this.thiefSprite = new Thief(this.thief.x, this.thief.y, 18);
 
+        this.input = new Input();
+
         this.lastTime = performance.now();
         requestAnimationFrame(this.loop.bind(this));
     }
@@ -244,6 +246,59 @@ class Game {
         this.thiefSprite.update(dt);
     }
 
+    movePlayerWithCollision(player, dx, dy) {
+        // horizontal movement
+        if (dx !== 0) {
+            const nextX = player.x + dx;
+            if (!this.tileMap.rectIntersectsWall(nextX, player.y, player.w, player.h)) {
+                player.x = nextX;
+            }
+        }
+
+        // vertical movement
+        if (dy !== 0) {
+            const nextY = player.y + dy;
+            if (!this.tileMap.rectIntersectsWall(player.x, nextY, player.w, player.h)) {
+                player.y = nextY;
+            }
+        }
+    }
+
+    movePolice(dt) {
+        // Police movement uses WASD keys
+        const policeSpeed = 160;
+
+        let moveX = 0;
+        let moveY = 0;
+
+        // WASD
+        if (this.input.isDown("a")) moveX -= 1;
+        if (this.input.isDown("d")) moveX += 1;
+        if (this.input.isDown("w")) moveY -= 1;
+        if (this.input.isDown("s")) moveY += 1;
+
+        // Prevent diagonal movements double speed
+        if (moveX !== 0 && moveY !== 0) {
+            const inv = 1 / Math.sqrt(2);
+            moveX *= inv;
+            moveY *= inv;
+        }
+
+        // Convert to pixels
+        const dx = moveX * policeSpeed * dt;
+        const dy = moveY * policeSpeed * dt;
+
+        // Move with collision
+        this.movePlayerWithCollision(this.police, dx, dy);
+
+        // Update pupil direction if moving
+        if (moveX !== 0 || moveY !== 0) {
+            const dirX = Math.sign(moveX);
+            const dirY = Math.sign(moveY);
+            this.policeSprite.setLookDirection(dirX, dirY);
+        }
+    }
+
     update(dt) {
         this.thief.update(dt);
         this.police.update(dt);
@@ -257,6 +312,7 @@ class Game {
 
         this.syncPoliceSprite(dt);
         this.syncThiefSprite(dt);
+        this.movePolice(dt);
     }
 
     draw() {
