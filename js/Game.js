@@ -266,7 +266,7 @@ class Game {
 
     movePolice(dt) {
         // Police movement uses WASD keys
-        const policeSpeed = 160;
+        const policeSpeed = 80;
 
         let moveX = 0;
         let moveY = 0;
@@ -277,7 +277,7 @@ class Game {
         if (this.input.isDown("w")) moveY -= 1;
         if (this.input.isDown("s")) moveY += 1;
 
-        // Prevent diagonal movements double speed
+        // Prevent diagonal speed boost
         if (moveX !== 0 && moveY !== 0) {
             const inv = 1 / Math.sqrt(2);
             moveX *= inv;
@@ -299,6 +299,56 @@ class Game {
         }
     }
 
+    moveThief(dt) {
+        // Thief movement uses arrow keys
+        const thiefSpeed = 60; // slower than police
+
+        let thiefMoveX = 0;
+        let thiefMoveY = 0;
+
+        // Arrow keys
+        if (this.input.isDown("arrowleft")) thiefMoveX -= 1;
+        if (this.input.isDown("arrowright")) thiefMoveX += 1;
+        if (this.input.isDown("arrowup")) thiefMoveY -= 1;
+        if (this.input.isDown("arrowdown")) thiefMoveY += 1;
+
+        // Prevent diagonal speed boost
+        if (thiefMoveX !== 0 && thiefMoveY !== 0) {
+            const inv = 1 / Math.sqrt(2);
+            thiefMoveX *= inv;
+            thiefMoveY *= inv;
+        }
+
+        // Converts to pixels
+        const thiefDx = thiefMoveX * thiefSpeed * dt;
+        const thiefDy = thiefMoveY * thiefSpeed * dt;
+
+        // Move with collision
+        this.movePlayerWithCollision(this.thief, thiefDx, thiefDy);
+
+        // Update mouth direction if moving
+        if (thiefMoveX !== 0 || thiefMoveY !== 0) {
+
+            // Face right/left
+            if (Math.abs(thiefMoveX) >= Math.abs(thiefMoveY)) {
+
+                if (thiefMoveX > 0) {
+                    this.thiefSprite.setFacing("right");
+                } else {
+                    this.thiefSprite.setFacing("left");
+                }
+
+            } else {
+                // Face down/up
+                if (thiefMoveY > 0) {
+                    this.thiefSprite.setFacing("down");
+                } else {
+                    this.thiefSprite.setFacing("up");
+                }
+            }
+        }
+    }
+
     update(dt) {
         this.thief.update(dt);
         this.police.update(dt);
@@ -313,6 +363,7 @@ class Game {
         this.syncPoliceSprite(dt);
         this.syncThiefSprite(dt);
         this.movePolice(dt);
+        this.moveThief(dt);
     }
 
     draw() {

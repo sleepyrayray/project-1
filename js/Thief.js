@@ -68,9 +68,11 @@ class Thief {
         } else if (this.facing === "right") {
             eyeX = cx - s * 0.10;
         } else if (this.facing === "up") {
-            eyeY = cy + s * 0.05;
+            eyeX = cx - s * 0.25;
+            eyeY = cy - s * 0.0001;
         } else if (this.facing === "down") {
-            eyeY = cy - s * 0.25;
+            eyeX = cx - s * 0.25;
+            eyeY = cy - s * 0.01;
         }
 
         // Red eye to make thief look like a bad guy
