@@ -9,7 +9,7 @@ class Thief {
 
         // Mouth animation
         this.mouthTime = 0;
-        this.mouthSpeed = 3.0;
+        this.mouthSpeed = 5.0;
 
         // Mouth range
         this.mouthMin = 0.05;

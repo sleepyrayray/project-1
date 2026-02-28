@@ -101,10 +101,10 @@ class Police {
     }
 
     drawHat(ctx, x, y, s) {
-        const hatW = s * 0.7;
-        const hatH = s * 0.22;
+        const hatW = s * 0.9;
+        const hatH = s * 0.25;
         const hatX = x + (s - hatW) / 2;
-        const hatY = y + s * 0.05;
+        const hatY = y + s * 0.007;
 
         ctx.fillStyle = "#1b1b1b";
         ctx.fillRect(hatX, hatY, hatW, hatH);
