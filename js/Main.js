@@ -34,7 +34,7 @@ music.addEventListener("ended", () => {
     playRandom();
 });
 
-// Play on first user click  
+// Play on first user click
 window.addEventListener("click", () => {
     if (music.readyState >= 2) { // metadata loaded
         playRandom();
@@ -82,11 +82,11 @@ const map = [
 ];
 
 // Draw brick wall tile
-function drawBrick(x, y, size) {
-    ctx.fillStyle = "#333333"; // dark grey brick fill
+function drawBrick(x, y, size, ctx) {
+    ctx.fillStyle = "#333333";
     ctx.fillRect(x, y, size, size);
 
-    ctx.strokeStyle = "#1f1f1f"; // darker mortar lines
+    ctx.strokeStyle = "#1f1f1f";
     ctx.lineWidth = 1;
 
     const brickHeight = size / 4;
@@ -94,10 +94,8 @@ function drawBrick(x, y, size) {
 
     for (let row = 0; row < 4; row++) {
         const offset = row % 2 === 0 ? 0 : brickWidth / 2;
-
         for (let col = 0; col < 2; col++) {
             const brickX = x + col * brickWidth + offset;
-
             if (brickX + brickWidth <= x + size) {
                 ctx.strokeRect(
                     brickX,
@@ -110,19 +108,12 @@ function drawBrick(x, y, size) {
     }
 }
 
-// Draw map
-function drawMap() {
-    // Light grey play area
-    ctx.fillStyle = "#e6e6e6";
-    ctx.fillRect(0, 0, cssWidth, cssHeight);
+// Expose drawBrick globally so TileMap.js can use it
+window.drawBrick = drawBrick;
 
-    for (let row = 0; row < MAP_ROWS; row++) {
-        for (let col = 0; col < MAP_COLS; col++) {
-            if (map[row][col] === "1") {
-                drawBrick(col * TILE_SIZE, row * TILE_SIZE, TILE_SIZE);
-            }
-        }
-    }
-}
+// Create TileMap and Game
+const tileMap = new TileMap(map, TILE_SIZE, MAP_COLS, MAP_ROWS);
+const game = new Game(canvas, ctx, tileMap, cssWidth, cssHeight);
 
-drawMap();
+// No drawMap() call here.
+// Game.loop() will call tileMap.draw() each frame and draw players + collectibles.
