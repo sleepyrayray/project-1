@@ -1,5 +1,14 @@
 # Project 1: Data Chase
 
+## Team
+- Ray Hernaez
+- Yann Kruplewicz
+- Zhuoheng Yang
+
+## Project Link
+- [Play it Here](https://sleepyrayray.github.io/project-1/)
+
+## Description
 A 2-player chase game made with **JavaScript + HTML Canvas**.  
 One player is the **Police** and the other is the **Data Thief**. The thief must collect all data collectibles in the maze, while the police tries to catch them first.
 
