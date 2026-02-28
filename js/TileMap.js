@@ -71,7 +71,7 @@ class TileMap {
     }
 
     draw(ctx, width, height) {
-        ctx.fillStyle = "#e6e6e6";
+        ctx.fillStyle = "#7f3b3bff";
         ctx.fillRect(0, 0, width, height);
 
         for (let row = 0; row < this.rows; row++) {

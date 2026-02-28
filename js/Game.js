@@ -57,6 +57,8 @@ class Game {
 
         // Create police sprite
         this.policeSprite = new Police(this.police.x, this.police.y, 18);
+        // Create thief sprite
+        this.thiefSprite = new Thief(this.thief.x, this.thief.y, 18);
 
         this.lastTime = performance.now();
         requestAnimationFrame(this.loop.bind(this));
@@ -232,7 +234,14 @@ class Game {
         // Keep sprite position similar to player position
         this.policeSprite.x = this.police.x;
         this.policeSprite.y = this.police.y;
-        this.policeSprite.update(dt); // Breathing animation
+        this.policeSprite.update(dt);
+    }
+
+    syncThiefSprite(dt) {
+        // Keep sprite position similar to player position
+        this.thiefSprite.x = this.thief.x;
+        this.thiefSprite.y = this.thief.y;
+        this.thiefSprite.update(dt);
     }
 
     update(dt) {
@@ -247,17 +256,19 @@ class Game {
         }
 
         this.syncPoliceSprite(dt);
+        this.syncThiefSprite(dt);
     }
 
     draw() {
         this.tileMap.draw(this.ctx, this.width, this.height);
 
-        for (const c of this.collectibles) c.draw(this.ctx);
-
-        this.thief.draw(this.ctx);
+        for (const c of this.collectibles) {
+            c.draw(this.ctx);
+        }
 
         // Draw police character art
         this.policeSprite.draw(this.ctx);
+        this.thiefSprite.draw(this.ctx);
     }
 
     loop(now) {
