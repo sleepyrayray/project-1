@@ -49,11 +49,14 @@ class Game {
             role: "thief",
         });
 
-        // Spawn 15 collectibles randomly
+        // Spawn collectibles randomly
         this.collectibles = this.spawnCollectibles(
             this.collectibleCount,
             this.collectibleRadius
         );
+
+        // Create police sprite
+        this.policeSprite = new Police(this.police.x, this.police.y, 18);
 
         this.lastTime = performance.now();
         requestAnimationFrame(this.loop.bind(this));
@@ -225,6 +228,13 @@ class Game {
         }
     }
 
+    syncPoliceSprite(dt) {
+        // Keep sprite position similar to player position
+        this.policeSprite.x = this.police.x;
+        this.policeSprite.y = this.police.y;
+        this.policeSprite.update(dt); // Breathing animation
+    }
+
     update(dt) {
         this.thief.update(dt);
         this.police.update(dt);
@@ -235,6 +245,8 @@ class Game {
                 this.thief.giveSpeedBoost(1.0); // 1 second boost
             }
         }
+
+        this.syncPoliceSprite(dt);
     }
 
     draw() {
@@ -242,8 +254,10 @@ class Game {
 
         for (const c of this.collectibles) c.draw(this.ctx);
 
-        this.police.draw(this.ctx);
         this.thief.draw(this.ctx);
+
+        // Draw police character art
+        this.policeSprite.draw(this.ctx);
     }
 
     loop(now) {
