@@ -96,10 +96,14 @@ class Game {
 
         // We move in 4 directions: right, left, down, up
         const neighborSteps = [
-            { deltaCol: 1, deltaRow: 0 },   // right
-            { deltaCol: -1, deltaRow: 0 },  // left
-            { deltaCol: 0, deltaRow: 1 },   // down
-            { deltaCol: 0, deltaRow: -1 },  // up
+            // right
+            { deltaCol: 1, deltaRow: 0 },
+            // left
+            { deltaCol: -1, deltaRow: 0 },
+            // down
+            { deltaCol: 0, deltaRow: 1 },
+            // up
+            { deltaCol: 0, deltaRow: -1 },
         ];
 
         // Keep searching until there are no tiles left to check
@@ -349,15 +353,64 @@ class Game {
         }
     }
 
+    teleportPoliceRandom() {
+        const spawn = this.tileMap.getRandomSpawnTileForRect(this.police.w, this.police.h);
+
+        // Find a spot away from thief
+        for (let i = 0; i < 20; i++) {
+            const dx = (spawn.x + this.police.w / 2) - (this.thief.x + this.thief.w / 2);
+            const dy = (spawn.y + this.police.h / 2) - (this.thief.y + this.thief.h / 2);
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            // Spawn at least 10 tiles away from thief
+            if (dist > this.tileMap.tileSize * 10) {
+                break;
+            }
+
+            const newSpawn = this.tileMap.getRandomSpawnTileForRect(this.police.w, this.police.h);
+            if (newSpawn) {
+                spawn.x = newSpawn.x;
+                spawn.y = newSpawn.y;
+            }
+        }
+
+        this.police.x = spawn.x;
+        this.police.y = spawn.y;
+
+        // Keep sprite teleport instantly
+        this.policeSprite.x = this.police.x;
+        this.policeSprite.y = this.police.y;
+    }
+
+    // Check police + collectible overlap
+    policeTouchesCollectible(collectible, player) {
+        const px = player.x + player.w / 2;
+        const py = player.y + player.h / 2;
+        const dx = px - collectible.x;
+        const dy = py - collectible.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < collectible.r + Math.min(player.w, player.h) * 0.35) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     update(dt) {
         this.thief.update(dt);
         this.police.update(dt);
 
-        // Thief gains speed boost at pickup
+        // Collectible interactions
         for (const c of this.collectibles) {
+            // Thief gains speed boost at pickup
             if (c.checkPickup(this.thief)) {
                 // +15 speed for 3 seconds
                 this.thief.giveSpeedBoost(15, 3);
+            }
+            // Police teleports randomly
+            if (!c.collected && this.policeTouchesCollectible(c, this.police)) {
+                this.teleportPoliceRandom();
             }
         }
 
