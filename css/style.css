@@ -1,0 +1,21 @@
+html,
+body {
+    margin: 0;
+    height: 100%;
+}
+
+body {
+    background: #d3d3d3;
+    /* light grey background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* keeps canvas centered vertically */
+}
+
+/* Makes the canvas look crisp and prevents selection */
+canvas {
+    display: block;
+    user-select: none;
+}

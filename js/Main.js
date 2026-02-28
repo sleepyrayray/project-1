@@ -2,14 +2,7 @@
 const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 
-// Center everything on screen
-document.body.style.margin = "0";
-document.body.style.background = "#d3d3d3"; // light grey background
-document.body.style.display = "flex";
-document.body.style.justifyContent = "center";
-document.body.style.alignItems = "center";
-document.body.style.height = "100vh";
-
+// Add canvas to page (CSS will center it)
 document.body.appendChild(canvas);
 
 // Background Music (start at random time and restart randomly)
@@ -18,6 +11,13 @@ music.volume = 0.5;
 
 // Function to start music at a random time
 function playRandom() {
+    // Avoid NaN if metadata isn't loaded yet
+    if (!isFinite(music.duration) || music.duration <= 0) {
+        music.currentTime = 0;
+        music.play();
+        return;
+    }
+
     const randomTime = Math.random() * music.duration;
     music.currentTime = randomTime;
     music.play();
@@ -55,8 +55,11 @@ const cssHeight = TILE_SIZE * MAP_ROWS;
 const dpr = window.devicePixelRatio || 1;
 canvas.width = cssWidth * dpr;
 canvas.height = cssHeight * dpr;
+
+// Ensure the canvas appears at the correct size on the page.
 canvas.style.width = cssWidth + "px";
 canvas.style.height = cssHeight + "px";
+
 ctx.scale(dpr, dpr);
 
 // 1 = wall, 0 = path
