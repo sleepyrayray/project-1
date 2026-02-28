@@ -79,8 +79,8 @@ const map = [
     "1110101110111011101011110101",
     "1000100000000000001000000101",
     "1010111110111111111111110101",
-    "1010000000000000000010000101",
-    "1011110110000110001000100001",
+    "1010000000100000100010000101",
+    "1011110110001110001000110001",
     "1111111111111111111111111111",
 ];
 
@@ -117,6 +117,3 @@ window.drawBrick = drawBrick;
 // Create TileMap and Game
 const tileMap = new TileMap(map, TILE_SIZE, MAP_COLS, MAP_ROWS);
 const game = new Game(canvas, ctx, tileMap, cssWidth, cssHeight);
-
-// No drawMap() call here.
-// Game.loop() will call tileMap.draw() each frame and draw players + collectibles.
