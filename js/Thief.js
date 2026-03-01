@@ -68,10 +68,10 @@ class Thief {
         } else if (this.facing === "right") {
             eyeX = cx - s * 0.10;
         } else if (this.facing === "up") {
-            eyeX = cx - s * 0.25;
+            eyeX = cx + s * 0.25;
             eyeY = cy - s * 0.0001;
         } else if (this.facing === "down") {
-            eyeX = cx - s * 0.25;
+            eyeX = cx + s * 0.25;
             eyeY = cy - s * 0.01;
         }
 
