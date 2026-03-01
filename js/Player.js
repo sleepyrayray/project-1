@@ -17,9 +17,10 @@ class Player {
     giveSpeedBoost(amount, seconds) {
         // Stack speed boost
         this.speedBoostAmount += amount;
-        // this.speedBoostAmount = Math.max(this.speedBoostAmount, amount); // keep strongest boost
-        this.speedBoostTimeLeft = Math.max(this.speedBoostTimeLeft, seconds);
-
+        // Max stacked speed at 45
+        this.speedBoostAmount = Math.min(this.speedBoostAmount, 45);
+        // Reset timer and not stacking time
+        this.speedBoostTimeLeft = seconds;
         this.speed = this.baseSpeed + this.speedBoostAmount;
     }
 
