@@ -62,6 +62,8 @@ class Game {
 
         this.input = new Input();
 
+        this.caught = false;
+
         this.lastTime = performance.now();
         requestAnimationFrame(this.loop.bind(this));
     }
@@ -401,6 +403,13 @@ class Game {
         this.thief.update(dt);
         this.police.update(dt);
 
+        const p = this.police;
+        const t = this.thief;
+        if (p.x < t.x + t.w && p.x + p.w > t.x &&
+            p.y < t.y + t.h && p.y + p.h > t.h) {
+            this.caught = true;
+        }
+
         // Collectible interactions
         for (const c of this.collectibles) {
             // Thief gains speed boost at pickup
@@ -429,7 +438,16 @@ class Game {
 
         // Draw police character art
         this.policeSprite.draw(this.ctx);
-        this.thiefSprite.draw(this.ctx);
+
+        if (this.caught) {
+            console.log("CAUGHT");
+            this.ctx.font = "bold 48px sans-serif";
+            this.ctx.fillStyle = "#d91818";
+            this.ctx.textAlign = "center";
+            this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
+        } else {
+            this.thiefSprite.draw(this.ctx);
+        }
     }
 
     loop(now) {
