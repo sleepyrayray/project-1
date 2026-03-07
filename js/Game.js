@@ -438,7 +438,6 @@ class Game {
 
         // Draw police character art
         this.policeSprite.draw(this.ctx);
-        this.thiefSprite.draw(this.ctx);
 
         if (this.caught) {
             console.log("CAUGHT");
@@ -446,6 +445,8 @@ class Game {
             this.ctx.fillStyle = "#d91818";
             this.ctx.textAlign = "center";
             this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
+        } else {
+            this.thiefSprite.draw(this.ctx);
         }
     }
 
