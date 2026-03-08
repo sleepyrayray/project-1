@@ -414,6 +414,8 @@ class Game {
         for (const c of this.collectibles) {
             // Thief gains speed boost at pickup
             if (c.checkPickup(this.thief)) {
+                // play random collect sound
+                if (window.playCollectSound) window.playCollectSound();
                 // +15 speed for 3 seconds
                 this.thief.giveSpeedBoost(15, 3);
             }

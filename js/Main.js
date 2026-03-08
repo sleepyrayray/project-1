@@ -5,9 +5,20 @@ const ctx = canvas.getContext("2d");
 // Add canvas to page (CSS will center it)
 document.body.appendChild(canvas);
 
-// Background Music (start at random time and restart randomly)
-const music = new Audio("assets/song1.mp3");
-music.volume = 0.5;
+// Background Music
+const music = new Audio("assets/audio/background.mp3");
+music.volume = 0.25;
+
+// Array of collecting sounds
+const collectSounds = [
+    new Audio("assets/audio/collect-1.mp3"),
+    new Audio("assets/audio/collect-2.mp3"),
+    new Audio("assets/audio/collect-3.mp3"),
+];
+// Collect sound volume
+for (const sound of collectSounds) {
+    sound.volume = 0.45;
+}
 
 // Function to start music at a random time
 function playRandom() {
@@ -42,6 +53,16 @@ window.addEventListener("click", () => {
         music.addEventListener("loadedmetadata", playRandom, { once: true });
     }
 }, { once: true });
+
+// Random collect sound
+window.playCollectSound = function () {
+    const index = Math.floor(Math.random() * collectSounds.length);
+    // Clone the sound so multiple pickups can overlap
+    const sound = collectSounds[index].cloneNode();
+    // Reset to play again immediately
+    sound.currentTime = 0;
+    sound.play();
+};
 
 // Map settings (wider than tall)
 const TILE_SIZE = 28;
