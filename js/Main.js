@@ -20,6 +20,10 @@ for (const sound of collectSounds) {
     sound.volume = 0.45;
 }
 
+// Teleport sound
+const teleportSound = new Audio("assets/audio/teleport.mp3");
+teleportSound.volume = 0.75;
+
 // Function to start music at a random time
 function playRandom() {
     // Avoid NaN if metadata isn't loaded yet
@@ -54,12 +58,22 @@ window.addEventListener("click", () => {
     }
 }, { once: true });
 
-// Random collect sound
+// Collect sound
 window.playCollectSound = function () {
+    // Random collect sound
     const index = Math.floor(Math.random() * collectSounds.length);
     // Clone the sound so multiple pickups can overlap
     const sound = collectSounds[index].cloneNode();
     // Reset to play again immediately
+    sound.currentTime = 0;
+    sound.play();
+};
+
+// Teleport sound
+window.playTeleportSound = function () {
+    // Clone for sound overlap
+    const sound = teleportSound.cloneNode();
+    sound.volume = 0.45;
     sound.currentTime = 0;
     sound.play();
 };

@@ -422,6 +422,9 @@ class Game {
             // Police teleports randomly
             if (!c.collected && this.policeTouchesCollectible(c, this.police)) {
                 this.teleportPoliceRandom();
+                // Play teleport sound
+                if (window.playTeleportSound) window.playTeleportSound();
+                this.teleportPoliceRandom();
             }
         }
 
