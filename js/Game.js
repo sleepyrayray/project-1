@@ -8,7 +8,7 @@ class Game {
 
         // Sizes
         this.playerSize = { w: 18, h: 18 };
-        this.collectibleRadius = 6;
+        // this.collectibleRadius = 6;
         this.collectibleCount = 15;
 
         // Spawns police top-left
@@ -50,10 +50,7 @@ class Game {
         });
 
         // Spawn collectibles randomly
-        this.collectibles = this.spawnCollectibles(
-            this.collectibleCount,
-            this.collectibleRadius
-        );
+        this.collectibles = this.spawnCollectibles(this.collectibleCount);
 
         // Create police sprite
         this.policeSprite = new Police(this.police.x, this.police.y, 18);
@@ -163,12 +160,28 @@ class Game {
     }
 
     // Spawn collectibles
-    spawnCollectibles(count, radius) {
+    spawnCollectibles(count) {
         const result = [];
         const triesPerCollectible = 3000;
 
-        // Treat collectible as a small rect for wall checks
-        const boxSize = radius * 2;
+        // Create 5 of each emoji (total 15)
+        const emojiTypes = ["🔖", "💻", "📸"];
+        const emojis = [];
+
+        for (const e of emojiTypes) {
+            for (let i = 0; i < 5; i++) {
+                emojis.push(e);
+            }
+        }
+
+        // Randomize emojis
+        for (let i = emojis.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = emojis[i];
+            emojis[i] = emojis[j];
+            emojis[j] = temp;
+        }
+        const boxSize = 14;
 
         for (let i = 0; i < count; i++) {
             let placed = false;
@@ -177,13 +190,10 @@ class Game {
                 const col = Math.floor(Math.random() * this.tileMap.cols);
                 const row = Math.floor(Math.random() * this.tileMap.rows);
 
-                if (!this.tileMap.isPathAtTile(col, row)) {
-                    continue;
-                }
+                if (!this.tileMap.isPathAtTile(col, row)) continue;
 
                 const center = this.tileMap.tileCenterToPixel(col, row);
 
-                // Test wall overlap
                 const rectX = center.x - boxSize / 2;
                 const rectY = center.y - boxSize / 2;
                 if (this.tileMap.rectIntersectsWall(rectX, rectY, boxSize, boxSize)) {
@@ -194,10 +204,10 @@ class Game {
                 const cy = center.y;
 
                 // Avoid spawning on players
-                if (this.circleHitsPlayer(cx, cy, radius, this.police)) {
+                if (this.circleHitsPlayer(cx, cy, boxSize / 2, this.police)) {
                     continue;
                 }
-                if (this.circleHitsPlayer(cx, cy, radius, this.thief)) {
+                if (this.circleHitsPlayer(cx, cy, boxSize / 2, this.thief)) {
                     continue;
                 }
 
@@ -207,7 +217,7 @@ class Game {
                     const dx = c.x - cx;
                     const dy = c.y - cy;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < c.r + radius + 4) {
+                    if (dist < boxSize) {
                         overlapsOther = true;
                         break;
                     }
@@ -216,12 +226,12 @@ class Game {
                     continue;
                 }
 
-                result.push(new Collectible(cx, cy, radius));
+                // Push to array
+                result.push(new Collectible(cx, cy, emojis[i]));
                 placed = true;
                 break;
             }
         }
-
         return result;
     }
 

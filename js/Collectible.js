@@ -1,17 +1,23 @@
 class Collectible {
-    constructor(x, y, r = 6) {
+    constructor(x, y, emoji = "🔖") {
         this.x = x;
         this.y = y;
-        this.r = r;
+        this.emoji = emoji;
         this.collected = false;
     }
 
     draw(ctx) {
-        if (this.collected) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-        ctx.fillStyle = "#00aaff";
-        ctx.fill();
+        if (this.collected) {
+            return;
+        }
+
+        // Draw data emoji
+        ctx.save();
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = "16px sans-serif";
+        ctx.fillText(this.emoji, this.x, this.y);
+        ctx.restore();
     }
 
     checkPickup(player) {
@@ -21,9 +27,9 @@ class Collectible {
         const py = player.y + player.h / 2;
         const dx = px - this.x;
         const dy = py - this.y;
-
+        const pickupRadius = Math.min(player.w, player.h) * 0.45;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < this.r + Math.min(player.w, player.h) * 0.35) {
+        if (dist < pickupRadius) {
             this.collected = true;
             return true;
         }
