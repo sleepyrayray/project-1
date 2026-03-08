@@ -402,7 +402,9 @@ class Game {
         const dy = py - collectible.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < collectible.r + Math.min(player.w, player.h) * 0.35) {
+        const touchRadius = 10;
+
+        if (dist < touchRadius) {
             return true;
         } else {
             return false;
@@ -416,7 +418,7 @@ class Game {
         const p = this.police;
         const t = this.thief;
         if (p.x < t.x + t.w && p.x + p.w > t.x &&
-            p.y < t.y + t.h && p.y + p.h > t.h) {
+            p.y < t.y + t.h && p.y + p.h > t.y) {
             this.caught = true;
         }
 
@@ -425,15 +427,18 @@ class Game {
             // Thief gains speed boost at pickup
             if (c.checkPickup(this.thief)) {
                 // play random collect sound
-                if (window.playCollectSound) window.playCollectSound();
+                if (window.playCollectSound) {
+                    window.playCollectSound();
+                }
                 // +15 speed for 3 seconds
                 this.thief.giveSpeedBoost(15, 3);
             }
             // Police teleports randomly
             if (!c.collected && this.policeTouchesCollectible(c, this.police)) {
-                this.teleportPoliceRandom();
                 // Play teleport sound
-                if (window.playTeleportSound) window.playTeleportSound();
+                if (window.playTeleportSound) {
+                    window.playTeleportSound();
+                }
                 this.teleportPoliceRandom();
             }
         }
