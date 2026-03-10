@@ -5,6 +5,11 @@ class Game {
         this.tileMap = tileMap;
         this.width = width;
         this.height = height;
+        this.caught = false;
+        this.thiefCollectCount = 0;
+        this.thiefCollectGoal = 10;
+        this.thiefWon = false;
+        this.gameOver = false;
 
         // Sizes
         this.playerSize = { w: 18, h: 18 };
@@ -400,24 +405,47 @@ class Game {
     }
 
     update(dt) {
+        if (this.gameOver) {
+            return;
+        }
+
         this.thief.update(dt);
         this.police.update(dt);
 
         const p = this.police;
         const t = this.thief;
-        if (p.x < t.x + t.w && p.x + p.w > t.x &&
-            p.y < t.y + t.h && p.y + p.h > t.h) {
+
+        // Police catches thief
+        if (
+            p.x < t.x + t.w &&
+            p.x + p.w > t.x &&
+            p.y < t.y + t.h &&
+            p.y + p.h > t.y
+        ) {
             this.caught = true;
+            this.gameOver = true;
+            return;
         }
 
         // Collectible interactions
         for (const c of this.collectibles) {
-            // Thief gains speed boost at pickup
-            if (c.checkPickup(this.thief)) {
+            // Thief picks up collectible
+            if (!c.collected && c.checkPickup(this.thief)) {
                 // +15 speed for 3 seconds
                 this.thief.giveSpeedBoost(15, 3);
+
+                // Count thief pickups
+                this.thiefCollectCount++;
+
+                // Thief wins after 10 collectibles
+                if (this.thiefCollectCount >= this.thiefCollectGoal) {
+                    this.thiefWon = true;
+                    this.gameOver = true;
+                    return;
+                }
             }
-            // Police teleports randomly
+
+            // Police touches collectible -> teleport
             if (!c.collected && this.policeTouchesCollectible(c, this.police)) {
                 this.teleportPoliceRandom();
             }
@@ -436,17 +464,28 @@ class Game {
             c.draw(this.ctx);
         }
 
-        // Draw police character art
+        // Draw police
         this.policeSprite.draw(this.ctx);
 
+        // Draw thief only if police has not already won
+        if (!this.caught) {
+            this.thiefSprite.draw(this.ctx);
+        }
+
+        // Police win screen
         if (this.caught) {
-            console.log("CAUGHT");
             this.ctx.font = "bold 48px sans-serif";
             this.ctx.fillStyle = "#d91818";
             this.ctx.textAlign = "center";
-            this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
-        } else {
-            this.thiefSprite.draw(this.ctx);
+            this.ctx.fillText("POLICE WIN", this.width / 2, this.height / 2);
+        }
+
+        // Thief win screen
+        if (this.thiefWon) {
+            this.ctx.font = "bold 48px sans-serif";
+            this.ctx.fillStyle = "#d91818";
+            this.ctx.textAlign = "center";
+            this.ctx.fillText("THIEF WIN", this.width / 2, this.height / 2);
         }
     }
 
