@@ -6,9 +6,15 @@ class Game {
         this.width = width;
         this.height = height;
 
+        // Game state
+        this.caught = false;
+        this.thiefCollectCount = 0;
+        this.thiefCollectGoal = 15;
+        this.thiefWon = false;
+        this.gameOver = false;
+
         // Sizes
         this.playerSize = { w: 18, h: 18 };
-        // this.collectibleRadius = 6;
         this.collectibleCount = 15;
 
         // Spawns police top-left
@@ -59,7 +65,7 @@ class Game {
 
         this.input = new Input();
 
-        this.caught = false;
+        this.teleportCooldown = 0;
 
         this.lastTime = performance.now();
         requestAnimationFrame(this.loop.bind(this));
@@ -412,6 +418,18 @@ class Game {
     }
 
     update(dt) {
+        if (this.gameOver) {
+            return;
+        }
+
+        // Cooldown timers
+        if (this.teleportCooldown > 0) {
+            this.teleportCooldown -= dt;
+            if (this.teleportCooldown < 0) {
+                this.teleportCooldown = 0;
+            }
+        }
+
         this.thief.update(dt);
         this.police.update(dt);
 
@@ -420,18 +438,29 @@ class Game {
         if (p.x < t.x + t.w && p.x + p.w > t.x &&
             p.y < t.y + t.h && p.y + p.h > t.y) {
             this.caught = true;
+            this.gameOver = true;
+            return;
         }
 
         // Collectible interactions
         for (const c of this.collectibles) {
             // Thief gains speed boost at pickup
-            if (c.checkPickup(this.thief)) {
+            if (!c.collected && c.checkPickup(this.thief)) {
                 // play random collect sound
                 if (window.playCollectSound) {
                     window.playCollectSound();
                 }
                 // +15 speed for 3 seconds
                 this.thief.giveSpeedBoost(15, 3);
+                // Count thief pickups
+                this.thiefCollectCount++;
+
+                // Thief wins after goal
+                if (this.thiefCollectCount >= this.thiefCollectGoal) {
+                    this.thiefWon = true;
+                    this.gameOver = true;
+                    return;
+                }
             }
             // Police teleports randomly
             if (!c.collected && this.policeTouchesCollectible(c, this.police)) {
@@ -440,6 +469,8 @@ class Game {
                     window.playTeleportSound();
                 }
                 this.teleportPoliceRandom();
+                // cooldown so it can’t trigger again instantly
+                this.teleportCooldown = 0.25;
             }
         }
 
@@ -459,14 +490,24 @@ class Game {
         // Draw police character art
         this.policeSprite.draw(this.ctx);
 
+        // Only draw thief if police hasn't already won
+        if (!this.caught) {
+            this.thiefSprite.draw(this.ctx);
+        }
+
+        // Win screens
         if (this.caught) {
-            console.log("CAUGHT");
             this.ctx.font = "bold 48px sans-serif";
             this.ctx.fillStyle = "#d91818";
             this.ctx.textAlign = "center";
-            this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
-        } else {
-            this.thiefSprite.draw(this.ctx);
+            this.ctx.fillText("POLICE WIN", this.width / 2, this.height / 2);
+        }
+
+        if (this.thiefWon) {
+            this.ctx.font = "bold 48px sans-serif";
+            this.ctx.fillStyle = "#d91818";
+            this.ctx.textAlign = "center";
+            this.ctx.fillText("THIEF WIN", this.width / 2, this.height / 2);
         }
     }
 
