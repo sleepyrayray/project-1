@@ -8,7 +8,9 @@ document.body.appendChild(canvas);
 // Play Again Button
 const playAgainBtn = document.createElement("button");
 playAgainBtn.textContent = "Play Again";
-// hidden until game over
+document.body.appendChild(playAgainBtn);
+
+// Play Again style
 playAgainBtn.style.display = "none";
 playAgainBtn.style.position = "fixed";
 playAgainBtn.style.left = "50%";
@@ -21,8 +23,6 @@ playAgainBtn.style.borderRadius = "10px";
 playAgainBtn.style.border = "none";
 playAgainBtn.style.background = "#ffffff";
 playAgainBtn.style.color = "#000000";
-
-document.body.appendChild(playAgainBtn);
 
 // Reload the page when clicked
 playAgainBtn.addEventListener("click", () => {
@@ -46,98 +46,89 @@ const collectSounds = [
     new Audio("assets/audio/collect-2.mp3"),
     new Audio("assets/audio/collect-3.mp3"),
 ];
-// Collect sound volume
-for (const sound of collectSounds) {
-    sound.volume = 0.45;
-}
 
-// Game Start spund
 const gameStartSound = new Audio("assets/audio/game-start.mp3");
-gameStartSound.volume = 0.5;
-
-// Teleport sound
 const teleportSound = new Audio("assets/audio/teleport.mp3");
-teleportSound.volume = 0.75;
-
-// Win sounds
 const policeWinSound = new Audio("assets/audio/police-win.mp3");
-policeWinSound.volume = 0.6;
 const thiefWinSound = new Audio("assets/audio/thief-win.mp3");
-thiefWinSound.volume = 0.6;
 
-// Function to start music at a random time
-function playRandom() {
-    // Avoid NaN if metadata isn't loaded yet
-    if (!isFinite(music.duration) || music.duration <= 0) {
-        music.currentTime = 0;
-        music.play();
-        return;
-    }
+// Volumes
+const VOLUME = {
+    collect: 0.45,
+    start: 0.2,
+    teleport: 0.45,
+    policeWin: 0.6,
+    thiefWin: 0.6,
+};
 
-    const randomTime = Math.random() * music.duration;
-    music.currentTime = randomTime;
-    music.play();
+// Set base volumes
+for (const s of collectSounds) {
+    s.volume = VOLUME.collect;
+    gameStartSound.volume = VOLUME.start;
+    teleportSound.volume = VOLUME.teleport;
+    policeWinSound.volume = VOLUME.policeWin;
+    thiefWinSound.volume = VOLUME.thiefWin;
 }
 
-// Wait for metadata to load to know the duration
-music.addEventListener("loadedmetadata", () => {
-    // Play initially at random
-    playRandom();
-});
+// Play cloned sounds
+function playSfx(baseAudio, volume) {
+    const s = baseAudio.cloneNode();
+    s.volume = volume;
+    s.currentTime = 0;
+    s.play();
+}
 
-// When the music ends, start again at a new random time
-music.addEventListener("ended", () => {
-    playRandom();
-});
-
-// Play on first user click
-window.addEventListener("click", () => {
-    if (music.readyState >= 2) { // metadata loaded
-        playRandom();
-    } else {
-        music.addEventListener("loadedmetadata", playRandom, { once: true });
-    }
-}, { once: true });
-
-// Collect sound
-window.playCollectSound = function () {
-    // Random collect sound
+// Play random collect sound
+function playRandomCollect() {
     const index = Math.floor(Math.random() * collectSounds.length);
-    // Clone the sound so multiple pickups can overlap
-    const sound = collectSounds[index].cloneNode();
-    // Reset to play again immediately
-    sound.currentTime = 0;
-    sound.play();
-};
+    const base = collectSounds[index];
+    playSfx(base, VOLUME.collect);
+}
 
-// Game Start sound
+// Expose SFX functions globally
+window.playCollectSound = function () {
+    playRandomCollect();
+};
 window.playGameStartSound = function () {
-    const s = gameStartSound.cloneNode();
-    s.volume = 0.5;
-    s.currentTime = 0;
-    s.play().catch(() => { });
+    playSfx(gameStartSound, VOLUME.start);
 };
-// Teleport sound
 window.playTeleportSound = function () {
-    // Clone for sound overlap
-    const sound = teleportSound.cloneNode();
-    sound.volume = 0.45;
-    sound.currentTime = 0;
-    sound.play();
+    playSfx(teleportSound, VOLUME.teleport);
 };
-// Win sounds
 window.playPoliceWinSound = function () {
-    const s = policeWinSound.cloneNode();
-    s.volume = 0.6;
-    s.currentTime = 0;
-    s.play().catch(() => { });
+    playSfx(policeWinSound, VOLUME.policeWin);
 };
 window.playThiefWinSound = function () {
-    const s = thiefWinSound.cloneNode();
-    s.volume = 0.6;
-    s.currentTime = 0;
-    s.play().catch(() => { });
+    playSfx(thiefWinSound, VOLUME.thiefWin);
 };
+
+// Start music at a random time
+function playMusicRandomTime() {
+    const randomTime = Math.random() * music.duration;
+    music.currentTime = randomTime;
+    music.play().catch(() => { });
+}
+
+// When the music loads, play at a random time
+music.addEventListener("loadedmetadata", () => {
+    playMusicRandomTime();
+});
+// When the music ends, restart at a new random time
+music.addEventListener("ended", () => {
+    playMusicRandomTime();
+});
+// Play on first user click
+window.addEventListener(
+    "click",
+    () => {
+        if (music.readyState >= 2) {
+            playMusicRandomTime();
+        } else {
+            music.addEventListener("loadedmetadata", playMusicRandomTime, { once: true });
+        }
+    },
+    { once: true }
+);
 
 // Map settings (wider than tall)
 const TILE_SIZE = 28;
@@ -172,7 +163,7 @@ const map = [
     "1000000000000000000000000001",
     "1011111011111111111011111101",
     "1000001000001000001000000001",
-    "1110101110111011101011110101",
+    "1110101110111011100011110101",
     "1000100000000000001000000101",
     "1010111110111111111111110101",
     "1010000000100000100010000101",

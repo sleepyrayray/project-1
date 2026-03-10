@@ -7,18 +7,21 @@ class Game {
         this.height = height;
 
         // Game state
-        this.caught = false;
         this.gameStarted = false;
+        this.gameOver = false;
+        this.caught = false;
+        this.thiefWon = false;
         this.thiefCollectCount = 0;
         this.thiefCollectGoal = 15;
-        this.thiefWon = false;
-        this.gameOver = false;
-
         this.startSoundPlayed = false;
         this.winSoundPlayed = false;
+        this.teleportCooldown = 0;
 
         // Sizes
-        this.playerSize = { w: 18, h: 18 };
+        this.playerSize = {
+            w: 18,
+            h: 18
+        };
         this.collectibleCount = 15;
 
         // Spawns police top-left
@@ -62,15 +65,13 @@ class Game {
         // Spawn collectibles randomly
         this.collectibles = this.spawnCollectibles(this.collectibleCount);
 
-        // Create police sprite
+        // Sprites
         this.policeSprite = new Police(this.police.x, this.police.y, 18);
-        // Create thief sprite
         this.thiefSprite = new Thief(this.thief.x, this.thief.y, 18);
 
         this.input = new Input();
 
-        this.teleportCooldown = 0;
-
+        // Loop
         this.lastTime = performance.now();
         requestAnimationFrame(this.loop.bind(this));
     }
@@ -258,15 +259,28 @@ class Game {
         }
     }
 
-    syncPoliceSprite(dt) {
-        // Keep sprite position similar to player position
+    // Check police + collectible overlap
+    policeTouchesCollectible(collectible, player) {
+        const px = player.x + player.w / 2;
+        const py = player.y + player.h / 2;
+        const dx = px - collectible.x;
+        const dy = py - collectible.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const touchRadius = 10;
+
+        if (dist < touchRadius) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    syncSprites(dt) {
         this.policeSprite.x = this.police.x;
         this.policeSprite.y = this.police.y;
         this.policeSprite.update(dt);
-    }
 
-    syncThiefSprite(dt) {
-        // Keep sprite position similar to player position
         this.thiefSprite.x = this.thief.x;
         this.thiefSprite.y = this.thief.y;
         this.thiefSprite.update(dt);
@@ -404,23 +418,6 @@ class Game {
         this.policeSprite.y = this.police.y;
     }
 
-    // Check police + collectible overlap
-    policeTouchesCollectible(collectible, player) {
-        const px = player.x + player.w / 2;
-        const py = player.y + player.h / 2;
-        const dx = px - collectible.x;
-        const dy = py - collectible.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        const touchRadius = 10;
-
-        if (dist < touchRadius) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     update(dt) {
         if (!this.gameStarted) {
             if (this.input.isDown(" ")) {
@@ -521,8 +518,7 @@ class Game {
             }
         }
 
-        this.syncPoliceSprite(dt);
-        this.syncThiefSprite(dt);
+        this.syncSprites(dt);
         this.movePolice(dt);
         this.moveThief(dt);
     }
