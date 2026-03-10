@@ -6,6 +6,7 @@ class Game {
         this.width = width;
         this.height = height;
         this.caught = false;
+        this.gameStarted = false;
         this.thiefCollectCount = 0;
         this.thiefCollectGoal = 10;
         this.thiefWon = false;
@@ -405,6 +406,13 @@ class Game {
     }
 
     update(dt) {
+        if (!this.gameStarted) {
+            if (this.input.isDown(" ")) {
+                this.gameStarted = true;
+            }
+            return;
+        }
+
         if (this.gameOver) {
             return;
         }
@@ -458,6 +466,23 @@ class Game {
     }
 
     draw() {
+        if (!this.gameStarted) {
+
+            this.ctx.fillStyle = "black";
+            this.ctx.fillRect(0, 0, this.width, this.height);
+
+            this.ctx.font = "bold 40px sans-serif";
+            this.ctx.fillStyle = "white";
+            this.ctx.textAlign = "center";
+
+            this.ctx.fillText("POLICE VS THIEF", this.width / 2, this.height / 2 - 40);
+
+            this.ctx.font = "24px sans-serif";
+            this.ctx.fillText("Press SPACE to Start", this.width / 2, this.height / 2 + 20);
+
+            return;
+        }
+        
         this.tileMap.draw(this.ctx, this.width, this.height);
 
         for (const c of this.collectibles) {
