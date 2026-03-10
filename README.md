@@ -36,3 +36,4 @@ The thief collects data items in a maze while the police tries to catch the thie
 ## Notes
 - Data items are shown as emojis: 🔖 🛒 📸 (5 of each).
 - A **Play Again** button appears after the match ends.
+- Read [Artist Statement PDF](https://github.com/sleepyrayray/project-1/blob/main/assets/artist-statement/ArtistStatement_Proj1_RayYannJason.pdf)
