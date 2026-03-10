@@ -9,27 +9,30 @@
 - [Play it Here](https://sleepyrayray.github.io/project-1/)
 
 ## Description
-A 2-player chase game made with **JavaScript + HTML Canvas**.  
-One player is the **Police** and the other is the **Data Thief**. The thief must collect all data collectibles in the maze, while the police tries to catch them first.
+**Data Chase** is a 2-player chase game made with **JavaScript + HTML Canvas**.  
+One player is the **Ghost Police** and the other player is the **Data Thief**.
+The thief collects data items in a maze while the police tries to catch the thief.
 
 ## How to Play
-- **Goal (Thief):** collect all data items without getting caught
-- **Goal (Police):** catch the thief before all items are collected
-- **Speed Boost:** when the thief collects a data item, they gain **+30 speed for 3 seconds**
-- **Teleportation:** if the police touches a collectible, the police **teleports to a random path tile**
+### 1- Start the match
+- Press **SPACE** to start.
+
+### 2- Win conditions
+- **Police wins** if they **catch the thief**.
+- **Thief wins** if they **collect all 15 data items**.
+
+### 3- Special mechanics
+- **Thief speed boost:** when the thief collects a data item, they get **+15 speed for 3 seconds**.
+- **Police teleport:** if the police touches a data item, the police **teleports randomly**.
 
 ## Controls
-- Police: `W A S D`
-- Thief: Arrow keys
+- **Police:** `W` `A` `S` `D`
+- **Thief:** Arrow keys (`←` `→` `↑` `↓`)
 
-## Tech / Features
-- HTML Canvas rendering (2D context)
-- Tile-based maze map (walls vs paths)
-- Object-oriented structure:
-  - `TileMap` handles the map + wall checks
-  - `Player` handles player state + movement
-  - `Collectible` handles pickups
-  - `Game` runs the loop (update/draw)
-  - `Police` and `Thief` handle character visuals/animation
-- Random collectible spawning on valid path tiles (no wall spawns)
-- Background music (starts on first click)
+## Audio
+- Background music plays after your first click on the browser.
+- Sound effects play on collecting, teleporting, game start, and winning.
+
+## Notes
+- Data items are shown as emojis: 🔖 🛒 📸 (5 of each).
+- A **Play Again** button appears after the match ends.
