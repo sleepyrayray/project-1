@@ -529,11 +529,11 @@ class Game {
             this.ctx.fillStyle = "black";
             this.ctx.fillRect(0, 0, this.width, this.height);
 
-            this.ctx.font = "bold 40px sans-serif";
+            this.ctx.font = "bold 70px sans-serif";
             this.ctx.fillStyle = "white";
             this.ctx.textAlign = "center";
 
-            this.ctx.fillText("POLICE VS THIEF", this.width / 2, this.height / 2 - 40);
+            this.ctx.fillText("DATA CHASE", this.width / 2, this.height / 2 - 40);
 
             this.ctx.font = "24px sans-serif";
             this.ctx.fillText("Press SPACE to Start", this.width / 2, this.height / 2 + 20);
@@ -557,17 +557,17 @@ class Game {
 
         // Win screens
         if (this.caught) {
-            this.ctx.font = "bold 48px sans-serif";
-            this.ctx.fillStyle = "#d91818";
+            this.ctx.font = "bold 60px sans-serif";
+            this.ctx.fillStyle = "#18b2d9ff";
             this.ctx.textAlign = "center";
-            this.ctx.fillText("POLICE WIN", this.width / 2, this.height / 2);
+            this.ctx.fillText("POLICE WINS", this.width / 2, this.height / 2);
         }
 
         if (this.thiefWon) {
-            this.ctx.font = "bold 48px sans-serif";
-            this.ctx.fillStyle = "#d91818";
+            this.ctx.font = "bold 60px sans-serif";
+            this.ctx.fillStyle = "#d9b618ff";
             this.ctx.textAlign = "center";
-            this.ctx.fillText("THIEF WIN", this.width / 2, this.height / 2);
+            this.ctx.fillText("THIEF WINS", this.width / 2, this.height / 2);
         }
     }
 
