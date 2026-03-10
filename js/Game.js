@@ -431,6 +431,11 @@ class Game {
                     window.playGameStartSound();
                     this.startSoundPlayed = true;
                 }
+
+                // Hide play again button
+                if (window.hidePlayAgainButton) {
+                    window.hidePlayAgainButton();
+                }
             }
             return;
         }
@@ -464,6 +469,11 @@ class Game {
                 this.winSoundPlayed = true;
             }
 
+            // Show play again button
+            if (window.showPlayAgainButton) {
+                window.showPlayAgainButton();
+            }
+
             return;
         }
 
@@ -489,6 +499,11 @@ class Game {
                     if (!this.winSoundPlayed && window.playThiefWinSound) {
                         window.playThiefWinSound();
                         this.winSoundPlayed = true;
+                    }
+
+                    // Show play again button
+                    if (window.showPlayAgainButton) {
+                        window.showPlayAgainButton();
                     }
 
                     return;

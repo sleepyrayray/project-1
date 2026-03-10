@@ -5,6 +5,37 @@ const ctx = canvas.getContext("2d");
 // Add canvas to page (CSS will center it)
 document.body.appendChild(canvas);
 
+// Play Again Button
+const playAgainBtn = document.createElement("button");
+playAgainBtn.textContent = "Play Again";
+// hidden until game over
+playAgainBtn.style.display = "none";
+playAgainBtn.style.position = "fixed";
+playAgainBtn.style.left = "50%";
+playAgainBtn.style.top = "50%";
+playAgainBtn.style.transform = "translate(-50%, 80px)";
+playAgainBtn.style.padding = "12px 18px";
+playAgainBtn.style.fontSize = "18px";
+playAgainBtn.style.cursor = "pointer";
+playAgainBtn.style.borderRadius = "10px";
+playAgainBtn.style.border = "none";
+playAgainBtn.style.background = "#ffffff";
+playAgainBtn.style.color = "#000000";
+
+document.body.appendChild(playAgainBtn);
+
+// Reload the page when clicked
+playAgainBtn.addEventListener("click", () => {
+    window.location.reload();
+});
+// Show or hide
+window.showPlayAgainButton = function () {
+    playAgainBtn.style.display = "block";
+};
+window.hidePlayAgainButton = function () {
+    playAgainBtn.style.display = "none";
+};
+
 // Background Music
 const music = new Audio("assets/audio/background.mp3");
 music.volume = 0.25;
