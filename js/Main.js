@@ -20,9 +20,19 @@ for (const sound of collectSounds) {
     sound.volume = 0.45;
 }
 
+// Game Start spund
+const gameStartSound = new Audio("assets/audio/game-start.mp3");
+gameStartSound.volume = 0.5;
+
 // Teleport sound
 const teleportSound = new Audio("assets/audio/teleport.mp3");
 teleportSound.volume = 0.75;
+
+// Win sounds
+const policeWinSound = new Audio("assets/audio/police-win.mp3");
+policeWinSound.volume = 0.6;
+const thiefWinSound = new Audio("assets/audio/thief-win.mp3");
+thiefWinSound.volume = 0.6;
 
 // Function to start music at a random time
 function playRandom() {
@@ -69,6 +79,13 @@ window.playCollectSound = function () {
     sound.play();
 };
 
+// Game Start sound
+window.playGameStartSound = function () {
+    const s = gameStartSound.cloneNode();
+    s.volume = 0.5;
+    s.currentTime = 0;
+    s.play().catch(() => { });
+};
 // Teleport sound
 window.playTeleportSound = function () {
     // Clone for sound overlap
@@ -76,6 +93,19 @@ window.playTeleportSound = function () {
     sound.volume = 0.45;
     sound.currentTime = 0;
     sound.play();
+};
+// Win sounds
+window.playPoliceWinSound = function () {
+    const s = policeWinSound.cloneNode();
+    s.volume = 0.6;
+    s.currentTime = 0;
+    s.play().catch(() => { });
+};
+window.playThiefWinSound = function () {
+    const s = thiefWinSound.cloneNode();
+    s.volume = 0.6;
+    s.currentTime = 0;
+    s.play().catch(() => { });
 };
 
 // Map settings (wider than tall)

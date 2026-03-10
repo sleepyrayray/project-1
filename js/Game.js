@@ -14,6 +14,9 @@ class Game {
         this.thiefWon = false;
         this.gameOver = false;
 
+        this.startSoundPlayed = false;
+        this.winSoundPlayed = false;
+
         // Sizes
         this.playerSize = { w: 18, h: 18 };
         this.collectibleCount = 15;
@@ -422,6 +425,12 @@ class Game {
         if (!this.gameStarted) {
             if (this.input.isDown(" ")) {
                 this.gameStarted = true;
+
+                // Play Game Start sound once
+                if (!this.startSoundPlayed && window.playGameStartSound) {
+                    window.playGameStartSound();
+                    this.startSoundPlayed = true;
+                }
             }
             return;
         }
@@ -445,8 +454,16 @@ class Game {
         const t = this.thief;
         if (p.x < t.x + t.w && p.x + p.w > t.x &&
             p.y < t.y + t.h && p.y + p.h > t.y) {
+
             this.caught = true;
             this.gameOver = true;
+
+            // Play police win sound once
+            if (!this.winSoundPlayed && window.playPoliceWinSound) {
+                window.playPoliceWinSound();
+                this.winSoundPlayed = true;
+            }
+
             return;
         }
 
@@ -467,6 +484,13 @@ class Game {
                 if (this.thiefCollectCount >= this.thiefCollectGoal) {
                     this.thiefWon = true;
                     this.gameOver = true;
+
+                    // Play thief win sound once
+                    if (!this.winSoundPlayed && window.playThiefWinSound) {
+                        window.playThiefWinSound();
+                        this.winSoundPlayed = true;
+                    }
+
                     return;
                 }
             }
